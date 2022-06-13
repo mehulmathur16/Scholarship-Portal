@@ -1,0 +1,123 @@
+<% include partials/header.ejs %> 
+<% include partials/middle.ejs %>
+<div class="card mx-auto col-lg-10 mt-4" style="align-items: center; padding: 20px"><br>
+          <h2 id="name"></h2>
+          <hr style="border: 1px solid; width: 800px; margin-top: -3px"><br>
+          <div class="card-body" id="1">
+            
+          </div>
+
+          <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header text-center">
+                  <h4 class="modal-title w-100 font-weight-bold">Check Eligibility</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body mx-3">
+                  <div class="md-form mb-4">
+                    <input type="text" id="state" class="form-control validate" data-toggle="tooltip" data-placement="bottom" title="Default is India">
+                    <label data-error="wrong" data-success="right" for="state">State</label>
+                  </div>
+                  <div class="md-form mb-3">
+                    <input type="number" id="income" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="income">Income</label>
+                  </div>
+                  <div class="md-form mb-3"> 
+                    <select class="browser-default custom-select mb-3" id="qualification">
+                        <option value="" disabled selected>Choose qualification</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                        <option value="Graduate">Graduate</option>
+                    </select>  
+                  </div>
+                  <div class="md-form mb-3">
+                    <input type="text" id="Percentage" class="form-control validate">
+                    <label data-error="wrong" data-success="right" for="Percentage">Percentage</label>
+                  </div>
+                  <div class="md-form mb-3"> 
+                    <select class="browser-default custom-select mb-3" id="category">
+                        <option value="" disabled selected>Category</option>
+                        <option value="1">SC</option>
+                        <option value="2">ST</option>
+                        <option value="3">EBC</option>
+                        <option value="4">OBC</option>
+                        <option value="5">General</option>
+                    </select>  
+                  </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                  <button class="btn btn-md btn-outline-primary mt-3" type="button" style="border-radius: 25px; width: 120px" id="check" onclick="checkEligibility()">Check</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <div class="row">
+          <a href="" class="btn btn-md btn-outline-primary mt-3" style="border-radius: 25px; margin-right: 50px" data-toggle="modal" data-target="#modalRegisterForm">Check eligibility</a>
+
+          <a href="" class="btn btn-md btn-outline-primary mt-3 float-right" style="border-radius: 25px; margin-left: 50px">Visit Site</a>
+          </div>
+
+
+
+
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+
+<script>
+    console.log("hiih");
+</script>
+
+
+
+  <script type="text/javascript">
+  
+  String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+    function Viewscholarship(){
+        var b= <%- JSON.stringify(id) %>;
+        console.log(b);
+        $.ajax({
+        url:"https://doit-ramrajani1998.c9users.io/getscholarshipbyid?id="+b,
+        type:"GET",
+        dataType: 'json',
+        headers: {
+        'Content-Type':'application/json' 
+        },
+        success:function(data) {
+            console.log(data);
+          for(var i=0;i<data.length;i++){
+          $('#name').append(data[i].sname);
+
+          var certificates = data[i].docrequired.replaceAll('<p>','<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>');
+          certificates = certificates.replaceAll("</p>","</span><br>");
+          
+          $('#1').append('<h4>About Scholarship</h4><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br><div><h5>Authority</h5><p>'+data[i].authority+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Department Name</h5><p>'+data[i].aname+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Eligibility Criteria</h5><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Category : '+data[i].category+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Minimum Qualification : '+data[i].spass+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Cutoff : '+data[i].cutoff+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Region : '+data[i].state+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Applicable Branch : '+data[i].applbranch+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Income Limit : '+data[i].incomelimit+'</span><br><br><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Benefits</h5><p>'+data[i].benefit+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Renewal Policy</h5><p>'+data[i].renew_policy+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Documents Required</h5><p>'+certificates+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div>');
+          }
+         console.log(data);
+        }
+      });
+     }
+     
+     
+      Viewscholarship();
+
+  </script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB cordate JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.4/js/mdb.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+       <div class="collapse navbar-collapse" id="navbarNav">
+	<% if(!CurrentUser){ %>		        
+			        <form class="form-inline my-2 my-lg-0 ml-auto" method="post" action="/login"> 
+			            <div class="md-form my-0">
+			            <input class="form-control mr-sm-2" type="email" placeholder="Enter Email-id" name="username" required>&nbsp &nbsp
+			            <input class="form-control mr-sm-2" type="password" placeholder="Enter password" name="password" required>&nbsp
+			            <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type=submit name="signin" >Sign In</button>
+			            <a class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" href="/signup">Register</a>
+			            </div>
+			        </form>
+	 <% } else{ %>
+            <div style="text-align: center;" class="form-inline my-2 my-lg-0 ml-auto">
+                
+                    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="loggingout"><a href="/logout">Log Out</a></button>
+        </div>
+
+     <% } %>		        
+			        
+			      </div>
+    		</nav>  

@@ -1,0 +1,404 @@
+<% include partials/header.ejs %>
+<% include partials/middle.ejs %>
+
+        <div class="card mx-auto col-lg-10 mt-4" style="align-items: center; padding: 20px"><br>
+          <h2 id="name">
+            <%= scholarship[0].sname %>
+          </h2>
+          <hr style="border: 1px solid; width: 800px; margin-top: -3px"><br>
+          <div class="card-body" id="1">
+            <h4>About Scholarship</h4>
+            <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+            <br>
+            <div>
+              <h5>Authority</h5>
+              <p> <%= scholarship[0].authority %> </p>
+              <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+              <br>
+            </div>
+            <div>
+              <h5>Department Name</h5>
+              <p> <%= scholarship[0].aname %> </p>
+              <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+              <br>
+            </div>
+            <div>
+              <h5>Eligibility Criteria</h5>
+              <i class="fas fa-arrow-right prefix mr-1"></i>
+              &nbsp
+              <span>Category : <%= scholarship[0].category %> </span>
+              <br>
+              <i class="fas fa-arrow-right prefix mr-1"></i>
+              &nbsp
+              <span>
+                Minimum Qualification : <%= scholarship[0].spass %>
+              </span>
+              <br>
+              <i class="fas fa-arrow-right prefix mr-1"></i>
+              &nbsp
+              <span>Cutoff : <%= scholarship[0].cutoff %> </span>
+              <br>
+              <i class="fas fa-arrow-right prefix mr-1"></i>&nbsp
+              <span>Region : <%= scholarship[0].state %> </span>
+              <br>
+              <i class="fas fa-arrow-right prefix mr-1"></i>&nbsp
+              <span>Applicable Branch : <%= scholarship[0].applbranch %> </span>
+              <br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp
+              <span>Income Limit : <%= scholarship[0].incomelimit %> </span>
+              <br><br>
+              <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br>
+            </div>
+            <div>
+              <h5>Benefits</h5>
+              <p> <%= scholarship[0].benefit %></p>
+              <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+              <br></div>
+              <div>
+                <h5>Renewal Policy</h5>
+                <p> <%- scholarship[0].renewpolicy %> </p>
+
+                <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+                <br>
+              </div>
+              <div>
+                <h5>Documents Required</h5>
+                <p> <%- scholarship[0].docrequired %> </p>
+                <hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray">
+                <br>
+              </div>
+          </div>
+
+          <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header text-center">
+                  <h4 class="modal-title w-100 font-weight-bold">Check Eligibility</h4>
+                  <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <form action="/checkEligibility" method="post">
+                  <div class="modal-body mx-3">
+                    <div class="md-form mb-4">
+                      <input type="text" id="state" class="form-control validate"
+                        data-toggle="tooltip" data-placement="bottom"
+                        title="Default is India" name="state">
+                      <label data-error="wrong" data-success="right"
+                        for="state">State</label>
+                    </div>
+                    <div class="md-form mb-3">
+                      <input type="number" id="income" class="form-control validate" name="income">
+                      <label data-error="wrong" data-success="right"
+                        for="income">Income</label>
+                    </div>
+                    <div class="md-form mb-3">
+                      <select class="browser-default custom-select mb-3" id="qualification" name="qualification">
+                        <option value="" disabled selected>Choose qualification</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                        <option value="Graduate">Graduate</option>
+                      </select>
+                    </div>
+                    <div class="md-form mb-3">
+                      <input type="text" id="Percentage" class="form-control validate" name="percentage">
+                      <label data-error="wrong" data-success="right"
+                        for="Percentage">Percentage</label>
+                    </div>
+                    <div class="md-form mb-3">
+                      <select class="browser-default custom-select mb-3" id="category" name="category">
+                        <option value="" disabled selected>Category</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="EBC">EBC</option>
+                        <option value="OBC">OBC</option>
+                        <option value="General">General</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-md btn-outline-primary mt-3" type="submit" value="submit"
+                      style="border-radius: 25px; width: 120px"
+                      id="checkeligi">Check</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+          
+          
+
+          <div class="row">
+          <a href="" class="btn btn-md btn-outline-primary mt-3" style="border-radius: 25px; margin-right: 50px" data-toggle="modal" data-target="#modalRegisterForm">Check eligibility</a>
+
+          <a href="<%= scholarship[0].link %>" id="visitsite" class="btn btn-md btn-outline-primary mt-3 float-right" style="border-radius: 25px; margin-left: 50px">Visit Site</a>
+          </div>
+      </div>
+
+ 
+          <div class="card mx-auto col-lg-10 mt-4"  id="page-wrapper">
+            <div class="card-header text-center pt-4" style="align-items: center;">
+                  <h4>Discussion Forum</h4>
+            </div>
+            <div class="card-body ml-5">
+                <h4 id="posted" style="text-align: center; color: green; display: none;">Your Question was posted</h4>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 mb-3">
+                    <h5 id="have" class="course-name">Have a doubt ?</h5> 
+                </div>
+                <div class="col-lg-8 form-group shadow-textarea">
+                  <textarea class="form-control z-depth-1" id="commentques" rows="3" placeholder="Ask something here..."></textarea>
+                </div>
+                <button class="btn btn-md btn-outline-primary ml-3" style="border-radius: 25px; width: 120px" name="submit" type="button" id="postquesbutton">Post</button><br><br>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 mb-3">
+                    <h5 id="have" class="course-name">Questions Asked</h5> 
+                </div>
+                <div class="showquestions"></div>
+            </div><br>                                                                
+          </div>
+        
+
+
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+
+    <script type="text/javascript">
+      var pagedata;
+
+
+
+      // function displayQuestions(){
+            
+      //       var ques="";
+      //   $.ajax({
+      //     url:"https://doit-ramrajani1998.c9users.io/getans",
+      //     type:"GET",
+      //     dataType: 'json',
+      //     headers: {
+      //     'Content-Type':'application/json' 
+      //     },
+      //     success:function(data) {
+      //       console.log(data);
+      //       ques=data;
+      //       /*
+      //       for(var i=0;i<data[0].question.length;i++){
+              
+      //         var ansarray="";
+              
+      //         for(var j=0;j<data[0].question[i].answers.length;j++){
+      //           ansarray=ansarray+'<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>'+data[0].question[i].answers[j].anstext+'</span><br>';
+      //         }
+              
+      //         $('.showquestions').append('<div class="card" style="margin-right: 30px; margin-left: 10px"><div class="card-header"><div class="float-left col-lg-11  quesnum" style="word-wrap: break-word; width: 650px; font-size: 18px" data-quenum="'+data[0].question[i].qnumber+'">'+data[0].question[i].qtext+'</div><div class="float-right col-lg-2"></div></div><div class="card-body"><div id="box'+data[0].question[i].qnumber+'" class="row"><div class="col-lg-8 form-group shadow-textarea"><textarea class="form-control z-depth-1" id="text'+data[0].question[i].qnumber+'" rows="2" placeholder="Post Your Answer..."></textarea></div><button class="btn btn-sm btn-outline-primary ml-3 mt-2 ansubmit" style="border-radius: 25px; height: 40px; width: 120px" name="submit" data-boxid="'+data[0].question[i].qnumber+'">Post</button><br><br></div></div>');
+              
+           
+              
+              
+              
+      //       }
+      //          */
+            
+      //     }
+      //   });
+
+      // }
+     
+
+        // String.prototype.replaceAll = function(search, replacement) {
+        //     var target = this;
+        //     return target.split(search).join(replacement);
+        // };
+
+        // function Viewscholarship(){
+        //     var b = <%- JSON.stringify(id) %>;
+        //     console.log(b);
+        //     $.ajax({
+        //     url:"https://doit-ramrajani1998.c9users.io/getscholarshipbyid?id="+b,
+        //     type:"GET",
+        //     dataType: 'json',
+        //     headers: {
+        //     'Content-Type':'application/json' 
+        //     },
+        //     success:function(data1) {
+        //         // data = data1;
+        //       //  pagedata=data[0];
+        //         // console.log(data);
+        //       // $('#name').append(data[0].sname);
+
+        //       // var certificates = data[0].docrequired.replaceAll('<p>','<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>');
+        //       // certificates = certificates.replaceAll("</p>","</span><br>");
+              
+        //       // if(data.cutoff=="nil"){
+        //       //   data.cutoff="-";
+        //       //   console.log(data[0].cutoff);
+        //       }
+        //       // $('#1').append('<h4>About Scholarship</h4><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br><div><h5>Authority</h5><p>'+data[0].authority+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Department Name</h5><p>'+data[0].aname+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Eligibility Criteria</h5><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Category : '+data[0].category+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Minimum Qualification : '+data[0].spass+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Cutoff : '+data[0].cutoff+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Region : '+data[0].state+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Applicable Branch : '+data[0].applbranch+'</span><br><i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>Income Limit : '+data[0].incomelimit+'</span><br><br><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Benefits</h5><p>'+data[0].benefit+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Renewal Policy</h5><p>'+data[0].renew_policy+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div><div><h5>Documents Required</h5><p>'+certificates+'</p><hr style="border: 0.5px solid; width: 800px; margin-top: -3px; color: gray"><br></div>');
+        //       // $('#visitsite').attr("href", data[0].link);
+      
+        //       // displayQuestions();
+          
+          
+          
+          
+          
+          
+          
+        //     }
+        //   });
+        //  }
+ // display questions
+      
+      //   $(document).ready(function(){
+      //     Viewscholarship();
+          
+          
+      //   });
+
+      // function checkEligibility(){
+      //     var b = <%- JSON.stringify(CurrentUser) %>;
+      //     if(b!='idea'){
+      //       console.log(b);
+      //       document.getElementById("state").val(b[0].state);
+      //       document.getElementById("income").val(b[0].income);
+            
+            
+      //     }else{
+         
+      //    var state = document.getElementById("state").value;
+      //   var income = document.getElementById("income").value;
+      //   var q = document.getElementById("qualification");
+            
+            
+      //     }
+        
+        
+        
+      //   var qualification = q.options[q.selectedIndex].text;
+      //   var percentage = document.getElementById("Percentage").value;
+      //   var percentage1=parseInt(percentage);
+      //   var c = document.getElementById("category");
+      //   var category = c.options[c.selectedIndex].text;
+        
+      //   console.log(state,income,qualification,percentage1,category);
+        
+        
+        
+        
+      //   console.log("---------------------------");
+      //   console.log(pagedata);
+      //   console.log("----------------------------");
+        
+      //   if(pagedata.cutoff!="nil"){
+      //   var strcutoff =pagedata.cutoff;
+      
+      //   var newStr = strcutoff.substring(0, strcutoff.length - 1);
+      //   var cutoff2=parseInt(newStr);
+      //   } 
+
+      //   if(data.cutoff=="nil"){
+               
+      //          if (state == pagedata.state && income<=pagedata.incomelimit && qualification==pagedata.spass  &&  category==pagedata.category ) {
+      //          console.log("yes done");
+      //          }     
+          
+      //   }
+      //   else {
+      //         console.log()
+      //        if (state == pagedata.state && income<=pagedata.incomelimit && qualification==pagedata.spass && percentage1>=cutoff2 &&  category==pagedata.category ) {
+      //          alert('congrats,you are eligible');
+      //       }else{
+      //         alert('You are not eligible!!');
+      //       }
+
+      //   }
+      // }
+      
+      
+      // $('#checkeligi').on("click",function(){
+      //   checkEligibility();
+      // })
+      
+      
+      
+      // $('.showquestions').on("click",'.showansbox',function(){
+        
+      //   var ansboxid=$('.showansbox').attr('data-boxid');
+      //   console.log(ansboxid);
+      //   var y='.showquestions .card-body #box'+ansboxid;
+      //   console.log(y);
+      //    var x = $(y);
+      //    console.log(x);
+      //     if (x.style.display === 'none') {
+      //       x.style.display = 'block';
+      //     } else {
+      //       x.style.display = 'none';
+      //     }
+        
+        
+      // });
+      
+      // $('.ansubmit').on("click",function(){
+      //    var ansboxid=$('.ansubmit').attr('data-boxid');
+      //    console.log(pagedata.id,ansboxid);
+      //    $.ajax({
+      //     url:"https://doit-ramrajani1998.c9users.io/postanswer?id="+pagedata.id+"&qnum="+ansboxid+"&anssent="+$('#text'+ansboxid),
+      //     type:"GET",
+      //     dataType: 'json',
+      //     headers: {
+      //     'Content-Type':'application/json' 
+      //     },
+      //     success:function(data) {
+      //       console.log(data);
+            
+            
+      //     }
+      //   });
+        
+        
+      // })
+
+      // function postAnswer(){
+          
+      // }
+
+
+      // function postQuestion(){
+          
+      //     var question = document.getElementById('commentques').value;
+      //     var id = this.pagedata.id;
+
+      //     console.log(question,id);
+      //     $.ajax({
+      //     url:"https://doit-ramrajani1998.c9users.io/addquestion?qtext="+question+"&id="+id,
+      //     type:"GET",
+      //     dataType: 'json',
+      //     headers: {
+      //     'Content-Type':'application/json' 
+      //     },
+      //     success:function(data) {
+      //       console.log(data);
+      //       document.getElementById('posted').style.display = "block";
+      //     }
+      //   });
+      // }
+      
+  //  $('#postquesbutton').on("click",function(){
+  //    postQuestion();
+  //  });
+
+
+    </script>
+
+    
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB cordate JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.4/js/mdb.min.js"></script>
+  </body>
+</html>

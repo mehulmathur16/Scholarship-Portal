@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+
+<a href="/">HOME</a>
+
+ 
+	<div class="card col-lg-8 mt-5 mx-auto">
+		<form>
+	  		<div class="card-header">
+	    		<h4>Frequently Asked Questions</h4>
+	  		</div>
+	  		<div class="card-body">
+	  			<br><br><br><br><br><br><br><br>
+	  			<div class="">
+	  				<div class="row">
+		  				<button type="button" class="ml-2 mr-2 mt-2 mb-2 btn btn-outline-primary" style="border-radius: 25px;" id="getans1"></button>
+					    <button type="button" class="ml-2 mr-2 mt-2 mb-2 btn btn-outline-primary mx-auto" style="border-radius: 25px;" id="getans2"></button>	
+		  				<button type="button" class="ml-2 mr-2 mt-2 mb-2 btn btn-outline-primary" style="border-radius: 25px;" id="getans3"></button>
+					    <button type="button" class="ml-2 mr-2 mt-2 mb-2 btn btn-outline-primary" style="border-radius: 25px;" id="getans4"></button>
+		  			</div>
+	  			</div>
+	  		</div>
+			<div class="card-footer green-border-focus">
+			   	<label for="ans">Answers</label>
+			  	<textarea class="form-control" id="ans"></textarea>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+
+		var arrkey=[     
+
+ "What types of scholarships are available?" ,
+ "What are my chances of gaining a scholarship?",
+"Can I get a scholarship for graduate study?",
+"Can I apply for a scholarship before being accepted into a university?" ,
+"Can I apply for a scholarship before being accepted into a college?" ,
+"How do I apply for international scholarships?",
+"When is the best time to apply for study abroad scholarships?",
+"What is lowest scholarship amount to a student is provided by any organization",
+"Name of the scholarship that provide lowest scholarship amount",
+"How  many government agencies are providing scholarship",
+
+];
+
+
+var arrval =  [
+"Scholarships from Governement,private and ngo agencies are available",
+ " Depends on the types of  scholarship you choose ,cutoff for that scholarship and your marks ",
+ "Yes ofcourse ,check  out on our website",
+ "Checkout for them on our website ,there  are many that you can get",
+"Check on our website  if there is any  scholarship that match your   college eligibility criteria",
+"Check on our  website if there  is any international scholarship availbale",
+ "There is no any suitable time for apply for this you can always be in touch with our websites and whenever they are available you can apply for that",
+"4000 per year",
+
+ "ONGC scholarship",
+  "16"
+
+
+];
+
+
+
+  // document.write after 1 second
+  // that's after the page loaded, so it erases the existing content
+        
+
+
+		var max=10;
+         
+
+         var a= Math.floor(Math.random() * Math.floor(max));
+        
+         console.log(arrkey[a]);
+         var Questions1=arrkey[a];
+         
+         document.getElementById('getans1').innerText=Questions1;
+
+        var b= Math.floor(Math.random() * Math.floor(max));
+         var Questions2=arrkey[b];
+         document.getElementById('getans2').innerText=Questions2;
+
+
+         var c= Math.floor(Math.random() * Math.floor(max));
+         var Questions3=arrkey[c];
+         document.getElementById('getans3').innerText=Questions3;
+
+         var d= Math.floor(Math.random() * Math.floor(max));
+         var Questions4=arrkey[d];
+         document.getElementById('getans4').innerText=Questions4;
+
+	</script>                                    
+	<script type="text/javascript">
+		document.getElementById("getans1").addEventListener("click", provideans1);
+		document.getElementById("getans2").addEventListener("click", provideans2);
+		document.getElementById("getans3").addEventListener("click", provideans3);
+		document.getElementById("getans4").addEventListener("click", provideans4);
+
+		function provideans1() {
+
+   			var j1 =document.getElementById("getans1").innerText;
+   			var j2=arrkey.indexOf(j1);
+            var j3= arrval[j2];
+
+
+		  document.getElementById("ans").textContent=j3;
+		}
+
+		function provideans2() {
+
+		  var k1 =document.getElementById("getans2").innerText;
+   			var k2=arrkey.indexOf(k1);
+            var k3= arrval[k2];
+
+
+		  document.getElementById("ans").innerText=k3;
+		}
+
+		function provideans3() {
+		  var l1 =document.getElementById("getans3").innerText;
+   			var l2=arrkey.indexOf(l1);
+            var l3= arrval[l2];
+
+
+		  document.getElementById("ans").innerText=l3;
+		}
+
+		function provideans4() {
+		  var m1 =document.getElementById("getans4").innerText;
+   			var m2=arrkey.indexOf(m1);
+            var m3= arrval[m2];
+
+
+		  document.getElementById("ans").innerText=m3;
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>

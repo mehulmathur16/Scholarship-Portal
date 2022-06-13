@@ -1,0 +1,167 @@
+<% include partials/header.ejs %>
+<% include partials/middle.ejs %>
+      <div class="card mt-3 mx-auto" style="height: 50px; width: 700px;border-radius: 25px; text-align: center; font-size: 28px">
+        All Scholarships
+      </div>
+
+      <div class="modal-body row mt-2">
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-header">
+              <h5 style="text-align: center;">Filters</h5>
+            </div>
+            <div class="card-body">
+              <form>
+                  <div class="mb-5"><label>Authority : </label>
+                  <div style="float: right; margin-right: 25px">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="Government" name="authority" value="Government">
+                      <label class="custom-control-label" for="Government">Government</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="NGO" name="authority" value="Ngo">
+                        <label class="custom-control-label" for="NGO">NGO</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Private" name="authority" value="Private">
+                        <label class="custom-control-label" for="Private">Private</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <label>Category : </label>
+                <select class="browser-default custom-select mb-4" id="category">
+                    <option value="" disabled>Choose option</option>
+                    <option value="1" selected>SC</option>
+                    <option value="2">ST</option>
+                    <option value="3">EBC</option>
+                    <option value="4">OBC</option>
+                    <option value="5">General</option>
+                </select>
+
+                <label>Region : </label>
+                <select class="browser-default custom-select mb-4" id="region">
+                    <option value="" disabled>Choose option</option>
+                    <option value="1" selected>India</option>
+                    <option value="2">Maharashtra</option>
+                    <option value="3">Karnataka</option>
+                    <option value="4">Uttar Pradesh</option>
+                    <option value="5">West Bengal</option>
+                </select>                
+
+                <label>Highest Qualification : </label>
+                <select class="browser-default custom-select mb-4" id="qualification">
+                    <option value="" disabled>Choose option</option>
+                    <option value="1" selected>10</option>
+                    <option value="2">12</option>
+                    <option value="3">Graduate</option>
+                </select>  
+
+                <!-- Send button -->
+                <button class="btn btn-outline-primary btn-block" type="button" id="submitfilter" style="border-radius: 25px;">Apply</button>
+
+            </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+        <div class="row mx-auto" id="scholardetails">
+          <% for(var i = 0 ; i < allscholarships.length ; i++){ %>
+            <div class="col-sm-6 mt-2">
+              <div class="card ml-auto">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <%= allscholarships[i].sname %>
+                  </h5>
+                  <i class="fas fa-landmark prefix mr-1"></i>
+                  <span class="card-text"> <%= allscholarships[i].authority %> </span>
+                  <br>
+
+                  <a href="viewscholarship?id=<%= allscholarships[i].id %>" 
+                    class="btn btn-sm btn-outline-primary mt-3" style="border-radius: 25px;">
+                     Check this
+                  </a>
+                </div>
+              </div>
+            </div>
+          <%}%>
+        </div>
+        </div>
+      
+      
+    </div>
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script type="text/javascript">
+      $(document).ready(function(){
+
+       $.ajax({
+        url:"https://doit-ramrajani1998.c9users.io/allscholarships",
+        type:"GET",
+        dataType: 'json',
+        headers: {
+        'Content-Type':'application/json' 
+        },
+        success:function(data) {
+          console.log(data);
+          for(var i=0;i<data.length;i++){
+          $('#scholardetails').append('<div class="col-sm-6 mt-2"><div class="card ml-auto"><div class="card-body"><h5 class="card-title">'+data[i].sname+'</h5><i class="fas fa-landmark prefix mr-1"></i><span class="card-text">'+data[i].authority+'</span><br><a href="'+location.origin+'/viewscholarship?id='+data[i].id+'" class="btn btn-sm btn-outline-primary mt-3" style="border-radius: 25px;">Check this</a></div></div></div>');
+          }
+        }
+      });
+     });
+    </script> -->
+    <!-- <script type="text/javascript">
+      function applyFilter(){
+        var checkboxes = [];
+        $("input:checkbox[name=authority]:checked").each(function(){
+            checkboxes.push($(this).val());
+        });
+        console.log(checkboxes);
+        var c = document.getElementById("category");
+        var category = c.options[c.selectedIndex].text;
+        var r = document.getElementById("region");
+        var region = r.options[r.selectedIndex].text;
+        var q = document.getElementById("qualification");
+        var qualification = q.options[q.selectedIndex].text;
+
+        console.log(category);
+
+        $.ajax({
+        url:"https://doit-ramrajani1998.c9users.io/filterscholarships?authority="+checkboxes+"&category="+category+"&region="+region+"&qualification="+qualification,
+        type:"GET",
+        dataType: 'json',
+        headers: {
+        'Content-Type':'application/json' 
+        },
+        success:function(data) {
+          console.log(data);
+          $('#scholardetails').children().remove();
+          if(data.length==0){
+            $('#scholardetails').append('<div class="card mx-auto" style="height: 100px; width: 600px;"><h4>Sorry! No Scholarships available.</h4></div>');
+          }
+          else{
+              for(var i=0;i<data.length;i++){
+              $('#scholardetails').append('<div class="col-sm-6 mt-2"><div class="card ml-auto"><div class="card-body"><h5 class="card-title">'+data[i].sname+'</h5><i class="fas fa-landmark prefix mr-1"></i><span class="card-text">'+data[i].authority+'</span><br><a href="'+location.origin+'/viewscholarship?id='+data[i].id+'" class="btn btn-sm btn-outline-primary mt-3" style="border-radius: 25px; ">Check this</a></div></div></div>');
+              }
+            }          
+        }
+      });
+      } -->
+
+     
+    <!-- </script> -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- JQuery -->
+  
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.4/js/mdb.min.js"></script>
+  </body>
+</html>
