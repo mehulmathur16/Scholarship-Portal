@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/mini-project', { useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost/doitdb', { useNewUrlParser: true });
 var passportLocalMongoose = require('passport-local-mongoose');
 var UserSchema = new mongoose.Schema({
     password: String,
@@ -18,4 +18,3 @@ var UserSchema = new mongoose.Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", UserSchema);
-

@@ -8,16 +8,11 @@ const express = require('express'),
     methodOverride = require("method-override"),
     User = require("./database/mongomodels/user.js"),
     request = require('request'),
-    minify = require('harp-minify'),
-    cheerio = require('cheerio'),
-    find = require('cheerio-eq'),
-    sq = require('./database/sqlmodels/scholar.js'),
-    Forum = require("./database/mongomodels/forum.js");
-const alert = require('alert')
+    cheerio = require('cheerio');
 require('dotenv').config();
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/mini-project', { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 var db = mongoose.connection;
 
@@ -40,36 +35,19 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(__dirname + '/styles'));
 app.use(morgan('combined'));
 
-
-
-//  isloggedIn function -- checking for user logged in using session
-
-
-
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect("/login");
 }
-//-----------------------------------------------------------------------------------------------
-//login routes
 
-//   Login routes using passport
-
-//show sign up page
 app.get("/signup", function (req, res) {
-
     res.render("register", { CurrentUser: req.user });
 });
 
-
-
-
 // register route 
 app.post("/register", function (req, res) {
-
-    console.log(req.body);
 
     User.register(new User({
         fullname: req.body.name,
@@ -81,17 +59,13 @@ app.post("/register", function (req, res) {
         state: req.body.state,
         branch: req.body.branch,
         income: req.body.income
-    }), req.body.password, function (err, user) {
+    }), req.body.password, async function (err, user) {
         if (err) {
             console.log(err);
             return res.render("index");
         }
-        passport.authenticate("local")(req, res, function () {
-            res.redirect("/");
-        });
+        res.redirect("/");
     });
-
-
 });
 
 // login route
@@ -100,12 +74,11 @@ app.post("/login", passport.authenticate("local", {
     failureRedirect: "/india"
 }), function (req, res) {
 
-
 });
 
 app.post("/checkEligibility", function (req, res) {
     console.log(req.body, req.query.id);
-    res.redirect("/")
+    // res.redirect("/")
 });
 
 // logout route
@@ -114,19 +87,14 @@ app.get("/logout", function (req, res) {
     res.redirect("/");
 });
 
-
-
-// -----------------------------------------------------------------------------------------------
-
-app.get("/", function (req, res) {
-    res.render("index", { CurrentUser: req.user });
+app.get("/", async function (req, res) {
+    var scholarship = await db.collection('scholarships').find({}).toArray();
+    const op = scholarship.slice(0, 8);
+    res.render("index", { CurrentUser: req.user, scholarships: op });
 });
-
-
 
 app.get("/scholarships", async function (req, res) {
     var allscholarships = await db.collection('scholarships').find({}).toArray();
-    // console.log(allscholarships);
     res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
 });
 
@@ -141,17 +109,7 @@ app.get("/viewscholarship", async function (req, res) {
     } else {
         res.render("viewscholarship", { id: req.query.id, CurrentUser: 'idea', scholarship: scholarship });
     }
-
-
 });
-
-
-
-
-
-// api's
-
-// api's from scholarships table
 
 app.get("/newsupdate", function (req, res) {
     var temp = "";
@@ -166,23 +124,7 @@ app.get("/newsupdate", function (req, res) {
             res.send(jsonData);
         }
     });
-
-
-
 });
-
-// get last for scholarships scholarships
-
-app.get("/fourscholars", sq.fourscholar);
-
-// get all scholarships
-app.get("/allscholarships", sq.allscholar);
-
-// get scholarships with respect to particular fields
-
-app.get("/filterscholarships", sq.filterscholar);
-// get scholarships by id
-app.get("/getscholarshipbyid", sq.scholarshipbyid);
 
 app.get("/dashboard", function (req, res) {
     res.render("dashboard", { CurrentUser: req.user });
@@ -192,28 +134,13 @@ app.get("/chatbot", function (req, res) {
     res.render("chatbot", { CurrentUser: req.user });
 })
 
-// forum api 
-// add questions
+app.post("/uploaddata", async (req, res) => {
+    await db.collection('scholarships').insertOne(req.body);
 
-app.get("/addquestion", sq.addques);
-
-// get answers
-app.get("/postanswer", sq.addans);
-
-// get all data with id
-app.get("/getallforum", sq.getall);
-// get all 
-app.get("/getques", sq.getques);
-//get all ans
-app.get("/getans", sq.getans);
-
-
-app.post("/uploaddata", sq.insert);
-
-
-
-
-
+    var scholarship = await db.collection('scholarships').find({}).toArray();
+    const op = scholarship.slice(0, 8);
+    res.render("index", { CurrentUser: req.user, scholarships: op });
+});
 
 app.listen(process.env.PORT, process.env.IP, function (req, res) {
     console.log("server started at : ", process.env.PORT);
