@@ -7,16 +7,8 @@
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ramrajani/doit.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ramrajani/doit/issues"
-  },
-  "homepage": "https://github.com/ramrajani/doit#readme",
   "dependencies": {
     "alert": "^5.0.10",
     "body-parser": "^1.18.3",

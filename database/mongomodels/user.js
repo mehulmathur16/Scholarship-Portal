@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://milk_dairy:amar@cluster0.2hpqs.mongodb.net/mini-project', { useNewUrlParser: true ,  useUnifiedTopology: true  } );
+// mongoose.connect('mongodb://localhost/doitdb', { useNewUrlParser: true });
 var passportLocalMongoose = require('passport-local-mongoose');
 var UserSchema = new mongoose.Schema({
     password: String,
@@ -18,4 +18,3 @@ var UserSchema = new mongoose.Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", UserSchema);
-
