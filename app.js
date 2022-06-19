@@ -17,7 +17,7 @@ const alert = require('alert')
 require('dotenv').config();
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/mini-project', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://milk_dairy:amar@cluster0.2hpqs.mongodb.net/mini-project', { useNewUrlParser: true, useUnifiedTopology: true }   );
 
 var db = mongoose.connection;
 
@@ -131,6 +131,7 @@ app.get("/scholarships", async function (req, res) {
 });
 
 app.get("/viewscholarship", async function (req, res) {
+  
     var scholarship = await db.collection('scholarships').find({ "id": req.query.id }).toArray();
 
     scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
@@ -210,8 +211,16 @@ app.get("/getans", sq.getans);
 
 app.post("/uploaddata", sq.insert);
 
-
-
+// ......................................................................********************************....................................................
+app.post('/getFilters', async function(req, res) {
+   
+    console.log("Hello",req.body);
+  //  res.send("ok")
+    var allscholarships = await db.collection('scholarships').find({ "authority":req.body.authority , "category":req.body.category}).toArray();
+    // console.log(allscholarships);
+    res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+    
+});
 
 
 

@@ -4,6 +4,7 @@
   "description": "Scholarships",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,6 +32,7 @@
     "mongoose": "^5.4.19",
     "morgan": "^1.9.1",
     "mysql": "github:mysqljs/mysql",
+    "nodemon": "^2.0.16",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
