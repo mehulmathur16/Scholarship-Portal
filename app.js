@@ -99,6 +99,7 @@ app.get("/scholarships", async function (req, res) {
 });
 
 app.get("/viewscholarship", async function (req, res) {
+  
     var scholarship = await db.collection('scholarships').find({ "id": req.query.id }).toArray();
 
     scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
@@ -133,6 +134,23 @@ app.get("/dashboard", function (req, res) {
 app.get("/chatbot", function (req, res) {
     res.render("chatbot", { CurrentUser: req.user });
 })
+
+app.post('/getFilters', async function(req, res) {
+    var allscholarships = [];
+    if(Array.isArray(req.body.authority)) {
+        for(let i = 0 ; i < req.body.authority.length ; i++) {
+            let arr = (await db.collection('scholarships').find({ "authority":req.body.authority[i], "category":req.body.category }).toArray());
+
+            for(let j = 0 ; j < arr.length ; j++) {
+                allscholarships.push(arr[j]);
+            }
+        }
+    }
+    else {
+        allscholarships = await db.collection('scholarships').find({ "authority":req.body.authority }).toArray();
+    }
+    res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+});
 
 app.post("/uploaddata", async (req, res) => {
     await db.collection('scholarships').insertOne(req.body);
