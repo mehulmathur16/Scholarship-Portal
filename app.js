@@ -159,7 +159,6 @@ app.post("/uploaddata", async (req, res) => {
     const op = scholarship.slice(0, 8);
     res.render("index", { CurrentUser: req.user, scholarships: op });
 });
-
 app.listen(process.env.PORT, process.env.IP, function (req, res) {
     console.log("server started at : ", process.env.PORT);
 });

@@ -367,7 +367,7 @@ bottom:0
 
 .banner-area
 {
-background:url(banner.jpg) center;
+/* background:url(banner.jpg) center; */
 background-size:cover
 }
 
