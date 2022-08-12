@@ -99,7 +99,7 @@ app.get("/scholarships", async function (req, res) {
 });
 
 app.get("/viewscholarship", async function (req, res) {
-  
+
     var scholarship = await db.collection('scholarships').find({ "id": req.query.id }).toArray();
 
     scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
@@ -118,8 +118,7 @@ app.get("/newsupdate", function (req, res) {
     request(url, function (err, response, html) {
         if (!err) {
             var $ = cheerio.load(html);
-            var a = $(".marquee").eq(0).text().trim();
-            console.log(a);
+            var a = $("marquee").eq('0').text().trim();
             var jsonData = {};
             jsonData['data'] = a;
             res.send(jsonData);
@@ -135,19 +134,19 @@ app.get("/chatbot", function (req, res) {
     res.render("chatbot", { CurrentUser: req.user });
 })
 
-app.post('/getFilters', async function(req, res) {
+app.post('/getFilters', async function (req, res) {
     var allscholarships = [];
-    if(Array.isArray(req.body.authority)) {
-        for(let i = 0 ; i < req.body.authority.length ; i++) {
-            let arr = (await db.collection('scholarships').find({ "authority":req.body.authority[i], "category":req.body.category }).toArray());
+    if (Array.isArray(req.body.authority)) {
+        for (let i = 0; i < req.body.authority.length; i++) {
+            let arr = (await db.collection('scholarships').find({ "authority": req.body.authority[i], "category": req.body.category }).toArray());
 
-            for(let j = 0 ; j < arr.length ; j++) {
+            for (let j = 0; j < arr.length; j++) {
                 allscholarships.push(arr[j]);
             }
         }
     }
     else {
-        allscholarships = await db.collection('scholarships').find({ "authority":req.body.authority }).toArray();
+        allscholarships = await db.collection('scholarships').find({ "authority": req.body.authority }).toArray();
     }
     res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
 });
