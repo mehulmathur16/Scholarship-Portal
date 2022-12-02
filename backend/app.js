@@ -90,25 +90,54 @@ app.get("/logout", function (req, res) {
 app.get("/", async function (req, res) {
     var scholarship = await db.collection('scholarships').find({}).toArray();
     const op = scholarship.slice(0, 8);
-    res.render("index", { CurrentUser: req.user, scholarships: op });
+    // res.render("index", { CurrentUser: req.user, scholarships: op });
+
+    var objToBeSent = {
+        CurrentUser: req.user,
+        scholarships: op,
+    }
+
+    res.status(200).send(objToBeSent);
 });
 
 app.get("/scholarships", async function (req, res) {
     var allscholarships = await db.collection('scholarships').find({}).toArray();
-    res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+    // res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+
+    var objToBeSent = {
+        CurrentUser: req.user,
+        allscholarships: allscholarships,
+    }
+
+    res.status(200).send(objToBeSent);
 });
 
-app.get("/viewscholarship", async function (req, res) {
+app.get("/viewscholarship/:id", async function (req, res) {
 
-    var scholarship = await db.collection('scholarships').find({ "id": req.query.id }).toArray();
+    const { id } = req.params;
+    var scholarship = await db.collection('scholarships').find({ "id": id }).toArray();
 
     scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
     scholarship[0].docrequired = scholarship[0].docrequired.split("</p>").join(`</span><br>`);
 
     if (req.user) {
-        res.render("viewscholarship", { id: req.query.id, CurrentUser: req.user, scholarship: scholarship });
+        // res.render("viewscholarship", { id: req.query.id, CurrentUser: req.user, scholarship: scholarship });
+
+        var objToBeSent = {
+            CurrentUser: req.user,
+            scholarship: scholarship,
+        }
+
+        res.status(200).send(objToBeSent);
     } else {
-        res.render("viewscholarship", { id: req.query.id, CurrentUser: 'idea', scholarship: scholarship });
+        // res.render("viewscholarship", { id: req.query.id, CurrentUser: 'idea', scholarship: scholarship });
+
+        var objToBeSent = {
+            CurrentUser: 'idea',
+            scholarship: scholarship,
+        }
+
+        res.status(200).send(objToBeSent);
     }
 });
 
