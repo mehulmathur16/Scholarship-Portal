@@ -8,6 +8,7 @@ const Home = () => {
 
     const [CurrentUser, setCurrentUser] = useState(undefined);
     const [scholarships, setScholarships] = useState([]);
+    const [newsUpdates, setnewsUpdates] = useState('');
 
     const axiosCall = () => {
         axios.get('/').then((res) => {
@@ -22,9 +23,30 @@ const Home = () => {
         })
     }
 
+    const getNewsUpdates = () => {
+        axios.get("/newsupdate").then((res) => {
+            var allUpdates = JSON.stringify(res.data.data);
+            var updates = allUpdates.split("     ");
+
+            var res = "";
+
+            for (var i = 0; i < updates.length; i++) {
+                updates[i].trim();
+                var s2 = updates[i].replaceAll('\\n', '');
+                var tag = "<p style=\"color:red\">";
+                var update = tag.concat(s2);
+                update.concat("</p>");
+                res += update;
+            }
+
+            setnewsUpdates(res);
+        })
+    }
+
     useEffect(() => {
         axiosCall();
         getCurrentLoggedInUser();
+        getNewsUpdates();
     }, [])
 
     const axiosLoginPostCall = () => {
@@ -126,7 +148,7 @@ const Home = () => {
                             <h4 className="mx-auto" style={{ color: 'white' }}>News Updates</h4>
                         </div>
                         <div className="card-body">
-                            <marquee behaviour="scroll" direction="left" id="1"></marquee>
+                            <marquee behaviour="scroll" direction="left" id="1" dangerouslySetInnerHTML={{ __html: newsUpdates }}></marquee>
                         </div>
                     </div>
 

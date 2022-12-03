@@ -151,15 +151,15 @@ app.get("/viewscholarship/:id", async function (req, res) {
 });
 
 app.get("/newsupdate", function (req, res) {
-    var temp = "";
     var url = "https://scholarships.gov.in/";
+
     request(url, function (err, response, html) {
         if (!err) {
             var $ = cheerio.load(html);
             var a = $("marquee").eq('0').text().trim();
             var jsonData = {};
             jsonData['data'] = a;
-            res.send(jsonData);
+            res.status(200).send(jsonData);
         }
     });
 });

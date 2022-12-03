@@ -1,6 +1,12 @@
-import React from 'react'
+import React from 'react';
 
 const Chatbot = () => {
+
+    // const dotenv = require('dotenv');
+    // const env = dotenv.config().parsed;
+
+    // {console.log(pro)}
+
     return (
         <>
             <div
@@ -30,7 +36,9 @@ const Chatbot = () => {
 
                 </div>
 
-                <iframe width="500" height="490" allow="microphone;" src='<%= process.env.DIALOG_API %>'></iframe>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <iframe width="500" height="490" allow="microphone;" src={process.env.REACT_APP_DIALOG_API}></iframe>
+                </div>
             </div>
         </>
     )
