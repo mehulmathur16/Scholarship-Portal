@@ -1,31 +1,32 @@
 {
-    "name": "doit",
-    "version": "1.0.0",
-    "description": "Scholarships",
-    "main": "app.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-      "alert": "^5.0.10",
-      "body-parser": "^1.18.3",
-      "cheerio": "^1.0.0-rc.2",
-      "cheerio-eq": "^1.0.1",
-      "dotenv": "^16.0.1",
-      "ejs": "^2.6.1",
-      "env": "0.0.2",
-      "express": "^4.16.4",
-      "express-session": "^1.15.6",
-      "harp-minify": "^0.4.0",
-      "method-override": "^3.0.0",
-      "mongoose": "^5.4.19",
-      "morgan": "^1.9.1",
-      "mysql": "github:mysqljs/mysql",
-      "passport": "^0.4.0",
-      "passport-local": "^1.0.0",
-      "passport-local-mongoose": "^5.0.1",
-      "request": "^2.88.0"
-    }
+  "name": "doit",
+  "version": "1.0.0",
+  "description": "Scholarships",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "alert": "^5.0.10",
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "cheerio-eq": "^1.0.1",
+    "cookie-session": "^2.0.0",
+    "dotenv": "^16.0.1",
+    "ejs": "^2.6.1",
+    "env": "0.0.2",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "harp-minify": "^0.4.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.4.19",
+    "morgan": "^1.9.1",
+    "mysql": "github:mysqljs/mysql",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.1",
+    "request": "^2.88.0"
   }
+}

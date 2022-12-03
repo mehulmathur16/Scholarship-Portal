@@ -20,7 +20,7 @@ var userLoggedIn = null;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.use(require('express-session')({
+app.use(require('cookie-session')({
     secret: "RSquare Corporation will be there soon",
     resave: false,
     saveUninitialized: false
