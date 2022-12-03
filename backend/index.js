@@ -12,9 +12,21 @@ const express = require('express'),
 require('dotenv').config();
 
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+
+    if (!err) {
+        console.log("MongoDB connected successfully.");
+    }
+    else {
+        console.log("Error in DB connection : ", err);
+    }
+})
 var db = mongoose.connection;
+db.on('error', console.log.bind(console, "connection error"));
+db.once('open', function (callback) {
+    console.log("connection succeeded");
+})
 
 var userLoggedIn = null;
 
