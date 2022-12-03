@@ -196,3 +196,5 @@ app.post("/uploaddata", async (req, res) => {
 app.listen(process.env.PORT, process.env.IP, function (req, res) {
     console.log("server started at : ", process.env.PORT);
 });
+
+module.exports = app;
