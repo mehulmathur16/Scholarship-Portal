@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../axios';
 
-import '../styles/Home.css';
-import '../styles/Main.css';
-import '../styles/OldHome.css';
-
 const Scholarships = () => {
 
     const [CurrentUser, setCurrentUser] = useState(undefined);
@@ -17,9 +13,52 @@ const Scholarships = () => {
         })
     }
 
+    const getCurrentLoggedInUser = () => {
+        axios.get("/getCurrentLoggedInUser").then((res) => {
+            setCurrentUser(res.data.CurrentUser);
+        })
+    }
+
     useEffect(() => {
         axiosCall();
+        getCurrentLoggedInUser();
     }, [])
+
+    const axiosPostRequest = () => {
+        axios.post("/getFilters", {
+            authority: document.getElementById("authority").value,
+            category: document.getElementById("category").value,
+        }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then((res) => {
+            setCurrentUser(res.data.CurrentUser);
+            setallscholarships(res.data.allscholarships);
+        })
+    }
+
+    const axiosLoginPostCall = () => {
+        axios.post("/login", {
+            username: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+        }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then((res) => {
+            if (res.data.success) {
+                setCurrentUser(res.data.user);
+            }
+        })
+    }
+
+    const axiosLogoutPostCall = () => {
+        axios.get('/logout').then(() => {
+
+        })
+        setCurrentUser(null);
+    }
 
     return (
         <>
@@ -35,17 +74,23 @@ const Scholarships = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
 
                     {(!CurrentUser) ? (
-                        <form className="form-inline my-2 my-lg-0 ml-auto" method="post" action="/login">
+                        <form className="form-inline my-2 my-lg-0 ml-auto">
                             <div className="md-form my-0">
-                                <input className="form-control mr-sm-2" type="email" placeholder="Enter Email-id" name="username" required />&nbsp; &nbsp;
-                                <input className="form-control mr-sm-2" type="password" placeholder="Enter password" name="password" required />&nbsp;
-                                <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit" name="signin" >Sign In</button>
+                                <input id="email" className="form-control mr-sm-2 email-styling" type="email" placeholder="Enter Email-id" name="username" required />&nbsp; &nbsp;
+                                <input id="password" className="form-control mr-sm-2 password-styling" type="password" placeholder="Enter password" name="password" required />&nbsp;
+                                <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" name="signin" onClick={(e) => {
+                                    e.preventDefault();
+                                    axiosLoginPostCall();
+                                }} >Sign In</button>
                                 <a className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" href="/signup">Register</a>
                             </div>
                         </form>
                     ) : (
                         <div style={{ textAlign: 'center' }} className="form-inline my-2 my-lg-0 ml-auto">
-                            <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="loggingout"><a href="/logout">Log Out</a></button>
+                            <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="loggingout" onClick={(e) => {
+                                e.preventDefault();
+                                axiosLogoutPostCall();
+                            }}><a href="/logout">Log Out</a></button>
                         </div>
                     )}
 
@@ -64,24 +109,14 @@ const Scholarships = () => {
                             <h5 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: '300' }}> Filters </h5>
                         </div>
                         <div className="card-body">
-                            <form action="/getFilters" method="post">
-                                <div className="mb-5"><label>Authority : </label>
-                                    <div style={{ float: 'right', marginRight: '25px' }}>
-                                        <div className="custom-control custom-checkbox">
-                                            <input type="checkbox" className="custom-control-input" id="Government" name="authority"
-                                                value="Government" />
-                                            <label className="custom-control-label" htmlFor="Government">Government</label>
-                                        </div>
-                                        <div className="custom-control custom-checkbox">
-                                            <input type="checkbox" className="custom-control-input" id="Ngo" name="authority" value="Ngo" />
-                                            <label className="custom-control-label" htmlFor="Ngo">NGO</label>
-                                        </div>
-                                        <div className="custom-control custom-checkbox">
-                                            <input type="checkbox" className="custom-control-input" id="Private" name="authority" value="Private" />
-                                            <label className="custom-control-label" htmlFor="Private">Private</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <form>
+                                <label>Authority : </label>
+                                <select className="browser-default custom-select mb-4" id="authority" name="authority" defaultValue={'All'}>
+                                    <option value="" disabled>Choose option</option>
+                                    <option value="Government">Government</option>
+                                    <option value="Ngo">NGO</option>
+                                    <option value="Private">Private</option>
+                                </select>
 
                                 <label>Category : </label>
                                 <select className="browser-default custom-select mb-4" id="category" name="category" defaultValue={'All'}>
@@ -113,7 +148,10 @@ const Scholarships = () => {
 
 
                                 <button className="btn btn-outline-primary btn-block" id="submitfilter" style={{ borderRadius: '25px' }}
-                                    type="submit">Apply</button>
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        axiosPostRequest();
+                                    }}>Apply</button>
 
                             </form>
                         </div>

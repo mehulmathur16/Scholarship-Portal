@@ -2,7 +2,7 @@ const express = require('express'),
     app = express(),
     morgan = require('morgan'),
     passport = require('passport'),
-    LocalStrategy = require('passport-local'),
+    LocalStrategy = require('passport-local').Strategy,
     passportLocalMongoose = require('passport-local-mongoose'),
     bodyParser = require('body-parser'),
     methodOverride = require("method-override"),
@@ -16,8 +16,8 @@ mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTo
 
 var db = mongoose.connection;
 
+var userLoggedIn = null;
 
-app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(require('express-session')({
@@ -27,10 +27,10 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+passport.use(new LocalStrategy(User.authenticate()));
 
 app.use(express.static(__dirname + '/styles'));
 app.use(morgan('combined'));
@@ -42,13 +42,16 @@ function isLoggedIn(req, res, next) {
     res.redirect("/login");
 }
 
+app.get("/getCurrentLoggedInUser", function (req, res) {
+    res.status(200).send({ CurrentUser: userLoggedIn });
+})
+
 app.get("/signup", function (req, res) {
-    res.render("register", { CurrentUser: req.user });
+    res.status(200).send({ CurrentUser: userLoggedIn });
 });
 
 // register route 
 app.post("/register", function (req, res) {
-
     User.register(new User({
         fullname: req.body.name,
         username: req.body.id,  //email
@@ -61,39 +64,49 @@ app.post("/register", function (req, res) {
         income: req.body.income
     }), req.body.password, async function (err, user) {
         if (err) {
-            console.log(err);
-            return res.render("index");
+            res.send("error");
         }
-        res.redirect("/");
+        res.send("ok");
     });
 });
 
-// login route
-app.post("/login", passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/india"
-}), function (req, res) {
+app.post("/login", function (req, res) {
+    if (!req.body.username) {
+        res.json({ success: false, message: "Username was not given" })
+    }
+    else if (!req.body.password) {
+        res.json({ success: false, message: "Password was not given" })
+    }
+    else {
+        passport.authenticate("local", function (err, user, info) {
+            if (err) {
+                res.send({ success: false, message: err + "Hello" });
+            }
+            else {
+                if (!user) {
+                    res.send({ success: false, message: "username or password incorrect" });
+                }
+                else {
+                    userLoggedIn = user.username;
+                    res.send({ success: true, message: "Authentication successful", user: user.username });
+                }
+            }
 
-});
-
-app.post("/checkEligibility", function (req, res) {
-    console.log(req.body, req.query.id);
-    // res.redirect("/")
+        })(req, res);
+    }
 });
 
 // logout route
 app.get("/logout", function (req, res) {
-    req.logout();
-    res.redirect("/");
+    userLoggedIn = null;
 });
 
 app.get("/", async function (req, res) {
     var scholarship = await db.collection('scholarships').find({}).toArray();
     const op = scholarship.slice(0, 8);
-    // res.render("index", { CurrentUser: req.user, scholarships: op });
 
     var objToBeSent = {
-        CurrentUser: req.user,
+        CurrentUser: userLoggedIn,
         scholarships: op,
     }
 
@@ -102,10 +115,11 @@ app.get("/", async function (req, res) {
 
 app.get("/scholarships", async function (req, res) {
     var allscholarships = await db.collection('scholarships').find({}).toArray();
-    // res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+
+    console.log(userLoggedIn);
 
     var objToBeSent = {
-        CurrentUser: req.user,
+        CurrentUser: userLoggedIn,
         allscholarships: allscholarships,
     }
 
@@ -113,25 +127,20 @@ app.get("/scholarships", async function (req, res) {
 });
 
 app.get("/viewscholarship/:id", async function (req, res) {
-
     const { id } = req.params;
     var scholarship = await db.collection('scholarships').find({ "id": id }).toArray();
 
     scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
     scholarship[0].docrequired = scholarship[0].docrequired.split("</p>").join(`</span><br>`);
 
-    if (req.user) {
-        // res.render("viewscholarship", { id: req.query.id, CurrentUser: req.user, scholarship: scholarship });
-
+    if (userLoggedIn) {
         var objToBeSent = {
-            CurrentUser: req.user,
+            CurrentUser: userLoggedIn,
             scholarship: scholarship,
         }
 
         res.status(200).send(objToBeSent);
     } else {
-        // res.render("viewscholarship", { id: req.query.id, CurrentUser: 'idea', scholarship: scholarship });
-
         var objToBeSent = {
             CurrentUser: 'idea',
             scholarship: scholarship,
@@ -155,14 +164,6 @@ app.get("/newsupdate", function (req, res) {
     });
 });
 
-app.get("/dashboard", function (req, res) {
-    res.render("dashboard", { CurrentUser: req.user });
-})
-
-app.get("/chatbot", function (req, res) {
-    res.render("chatbot", { CurrentUser: req.user });
-})
-
 app.post('/getFilters', async function (req, res) {
     var allscholarships = [];
     if (Array.isArray(req.body.authority)) {
@@ -177,7 +178,8 @@ app.post('/getFilters', async function (req, res) {
     else {
         allscholarships = await db.collection('scholarships').find({ "authority": req.body.authority }).toArray();
     }
-    res.render("scholarships", { CurrentUser: req.user, allscholarships: allscholarships });
+
+    res.status(200).send({ CurrentUser: userLoggedIn, allscholarships: allscholarships });
 });
 
 app.post("/uploaddata", async (req, res) => {
@@ -185,8 +187,12 @@ app.post("/uploaddata", async (req, res) => {
 
     var scholarship = await db.collection('scholarships').find({}).toArray();
     const op = scholarship.slice(0, 8);
-    res.render("index", { CurrentUser: req.user, scholarships: op });
+
+    var obj = { CurrentUser: userLoggedIn, scholarships: op }
+
+    res.status(200).send(obj);
 });
+
 app.listen(process.env.PORT, process.env.IP, function (req, res) {
     console.log("server started at : ", process.env.PORT);
 });

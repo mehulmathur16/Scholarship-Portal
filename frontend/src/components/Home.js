@@ -3,7 +3,6 @@ import axios from '../axios';
 
 import '../styles/Home.css';
 import '../styles/Main.css';
-import '../styles/OldHome.css';
 
 const Home = () => {
 
@@ -17,9 +16,38 @@ const Home = () => {
         })
     }
 
+    const getCurrentLoggedInUser = () => {
+        axios.get("/getCurrentLoggedInUser").then((res) => {
+            setCurrentUser(res.data.CurrentUser);
+        })
+    }
+
     useEffect(() => {
         axiosCall();
+        getCurrentLoggedInUser();
     }, [])
+
+    const axiosLoginPostCall = () => {
+        axios.post("/login", {
+            username: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+        }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then((res) => {
+            if (res.data.success) {
+                setCurrentUser(res.data.user);
+            }
+        })
+    }
+
+    const axiosLogoutPostCall = () => {
+        axios.get('/logout').then(() => {
+
+        })
+        setCurrentUser(null);
+    }
 
     return (
         <>
@@ -35,17 +63,23 @@ const Home = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
 
                     {(!CurrentUser) ? (
-                        <form className="form-inline my-2 my-lg-0 ml-auto" method="post" action="/login">
+                        <form className="form-inline my-2 my-lg-0 ml-auto">
                             <div className="md-form my-0">
-                                <input className="form-control mr-sm-2" type="email" placeholder="Enter Email-id" name="username" required />&nbsp; &nbsp;
-                                <input className="form-control mr-sm-2" type="password" placeholder="Enter password" name="password" required />&nbsp;
-                                <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit" name="signin" >Sign In</button>
+                                <input id="email" className="form-control mr-sm-2 email-styling" type="email" placeholder="Enter Email-id" name="username" required />&nbsp; &nbsp;
+                                <input id="password" className="form-control mr-sm-2 password-styling" type="password" placeholder="Enter password" name="password" required />&nbsp;
+                                <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" name="signin" onClick={(e) => {
+                                    e.preventDefault();
+                                    axiosLoginPostCall();
+                                }} >Sign In</button>
                                 <a className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" href="/signup">Register</a>
                             </div>
                         </form>
                     ) : (
                         <div style={{ textAlign: 'center' }} className="form-inline my-2 my-lg-0 ml-auto">
-                            <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="loggingout"><a href="/logout">Log Out</a></button>
+                            <button className="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="loggingout" onClick={(e) => {
+                                e.preventDefault();
+                                axiosLogoutPostCall();
+                            }}><a href="/logout">Log Out</a></button>
                         </div>
                     )}
 
