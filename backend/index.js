@@ -158,7 +158,7 @@ app.get("/viewscholarship/:id", async function (req, res) {
         res.status(200).send(objToBeSent);
     } else {
         var objToBeSent = {
-            CurrentUser: 'idea',
+            CurrentUser: null,
             scholarship: scholarship,
         }
 
