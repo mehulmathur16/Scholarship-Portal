@@ -114,21 +114,25 @@ app.get("/logout", function (req, res) {
 });
 
 app.get("/", async function (req, res) {
-    var scholarship = await db.collection('scholarships').find({}).toArray();
-    const op = scholarship.slice(0, 8);
+    try {
+        var scholarship = await db.collection('scholarships').find({}).toArray();
+        const op = scholarship.slice(0, 8);
 
-    var objToBeSent = {
-        CurrentUser: userLoggedIn,
-        scholarships: op,
+        var objToBeSent = {
+            CurrentUser: userLoggedIn,
+            scholarships: op,
+        }
+
+        res.status(200).send(objToBeSent);
     }
-
-    res.status(200).send(objToBeSent);
+    catch (e) {
+        console.log(e);
+        res.status(200).json("Error encountered!");
+    }
 });
 
 app.get("/scholarships", async function (req, res) {
     var allscholarships = await db.collection('scholarships').find({}).toArray();
-
-    console.log(userLoggedIn);
 
     var objToBeSent = {
         CurrentUser: userLoggedIn,
