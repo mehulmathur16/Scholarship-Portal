@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-const instance = axios.create({
-    baseURL: "https://scholarship-portal.onrender.com/",
-})
 
-export default instance;
+axios.defaults.baseURL = 'https://scholarship-portal.onrender.com/';
+
+// const instance = axios.create({
+//     baseURL: "https://scholarship-portal.onrender.com/",
+// })
+
+export default axios;
