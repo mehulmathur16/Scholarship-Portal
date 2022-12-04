@@ -9,6 +9,7 @@ const express = require('express'),
     User = require("./database/mongomodels/user.js"),
     request = require('request'),
     cheerio = require('cheerio');
+cors = require('cors');
 require('dotenv').config();
 
 var mongoose = require('mongoose');
@@ -39,6 +40,7 @@ app.use(require('cookie-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
