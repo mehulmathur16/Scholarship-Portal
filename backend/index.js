@@ -116,56 +116,55 @@ app.get("/logout", function (req, res) {
 });
 
 app.get("/", async function (req, res) {
-    try {
-        var scholarship = await db.collection('scholarships').find({}).toArray();
-        const op = scholarship.slice(0, 8);
 
-        var objToBeSent = {
-            CurrentUser: userLoggedIn,
-            scholarships: op,
-        }
+    await db.collection('scholarships').find({}).toArray()
+        .then((scholarship) => {
+            const op = scholarship.slice(0, 8);
 
-        res.status(200).send(objToBeSent);
-    }
-    catch (e) {
-        console.log(e);
-        res.status(200).json("Error encountered!");
-    }
+            var objToBeSent = {
+                CurrentUser: userLoggedIn,
+                scholarships: op,
+            }
+
+            res.status(200).send(objToBeSent);
+        })
 });
 
 app.get("/scholarships", async function (req, res) {
-    var allscholarships = await db.collection('scholarships').find({}).toArray();
+    await db.collection('scholarships').find({}).toArray()
+        .then((allscholarships) => {
+            var objToBeSent = {
+                CurrentUser: userLoggedIn,
+                allscholarships: allscholarships,
+            }
 
-    var objToBeSent = {
-        CurrentUser: userLoggedIn,
-        allscholarships: allscholarships,
-    }
-
-    res.status(200).send(objToBeSent);
+            res.status(200).send(objToBeSent);
+        })
 });
 
 app.get("/viewscholarship/:id", async function (req, res) {
     const { id } = req.params;
-    var scholarship = await db.collection('scholarships').find({ "id": id }).toArray();
+    await db.collection('scholarships').find({ "id": id }).toArray()
+        .then((scholarship) => {
+            scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
+            scholarship[0].docrequired = scholarship[0].docrequired.split("</p>").join(`</span><br>`);
 
-    scholarship[0].docrequired = scholarship[0].docrequired.split("<p>").join(`<i class="fas fa-arrow-right prefix mr-1"></i>&nbsp<span>`);
-    scholarship[0].docrequired = scholarship[0].docrequired.split("</p>").join(`</span><br>`);
+            if (userLoggedIn) {
+                var objToBeSent = {
+                    CurrentUser: userLoggedIn,
+                    scholarship: scholarship,
+                }
 
-    if (userLoggedIn) {
-        var objToBeSent = {
-            CurrentUser: userLoggedIn,
-            scholarship: scholarship,
-        }
+                res.status(200).send(objToBeSent);
+            } else {
+                var objToBeSent = {
+                    CurrentUser: null,
+                    scholarship: scholarship,
+                }
 
-        res.status(200).send(objToBeSent);
-    } else {
-        var objToBeSent = {
-            CurrentUser: null,
-            scholarship: scholarship,
-        }
-
-        res.status(200).send(objToBeSent);
-    }
+                res.status(200).send(objToBeSent);
+            }
+        })
 });
 
 app.get("/newsupdate", function (req, res) {
@@ -186,29 +185,34 @@ app.post('/getFilters', async function (req, res) {
     var allscholarships = [];
     if (Array.isArray(req.body.authority)) {
         for (let i = 0; i < req.body.authority.length; i++) {
-            let arr = (await db.collection('scholarships').find({ "authority": req.body.authority[i], "category": req.body.category }).toArray());
-
-            for (let j = 0; j < arr.length; j++) {
-                allscholarships.push(arr[j]);
-            }
+            await db.collection('scholarships').find({ "authority": req.body.authority[i], "category": req.body.category }).toArray()
+                .then((arr) => {
+                    for (let j = 0; j < arr.length; j++) {
+                        allscholarships.push(arr[j]);
+                    }
+                    res.status(200).send({ CurrentUser: userLoggedIn, allscholarships: allscholarships });
+                })
         }
     }
     else {
-        allscholarships = await db.collection('scholarships').find({ "authority": req.body.authority }).toArray();
+        await db.collection('scholarships').find({ "authority": req.body.authority }).toArray()
+            .then((allscholarships) => {
+                res.status(200).send({ CurrentUser: userLoggedIn, allscholarships: allscholarships });
+            })
     }
-
-    res.status(200).send({ CurrentUser: userLoggedIn, allscholarships: allscholarships });
 });
 
 app.post("/uploaddata", async (req, res) => {
     await db.collection('scholarships').insertOne(req.body);
 
-    var scholarship = await db.collection('scholarships').find({}).toArray();
-    const op = scholarship.slice(0, 8);
+    await db.collection('scholarships').find({}).toArray()
+        .then((scholarship) => {
+            const op = scholarship.slice(0, 8);
 
-    var obj = { CurrentUser: userLoggedIn, scholarships: op }
+            var obj = { CurrentUser: userLoggedIn, scholarships: op }
 
-    res.status(200).send(obj);
+            res.status(200).send(obj);
+        })
 });
 
 app.listen(process.env.PORT, process.env.IP, function (req, res) {
