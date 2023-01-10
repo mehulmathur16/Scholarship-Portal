@@ -122,6 +122,8 @@ app.get("/logout", function (req, res) {
 app.get("/", async function (req, res) {
     await connectMongoose()
         .then(async () => {
+            var db = mongoose.connection;
+
             await db.collection('scholarships').find({}).toArray()
                 .then((scholarship) => {
                     const op = scholarship.slice(0, 8);
