@@ -15,19 +15,19 @@ require('dotenv').config();
 var mongoose = require('mongoose');
 
 var connectMongoose = async () => {
-    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-
-        if (!err) {
-            console.log("MongoDB connected successfully.");
-        }
-        else {
-            console.log("Error in DB connection : ", err);
-        }
-    });
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log("MongoDB connected successfully.");
+    }
+    catch (err) {
+        console.log("Error in DB connection : ", err);
+    }
 }
 
 connectMongoose();
+
 var db = mongoose.connection;
+
 db.on('error', console.log.bind(console, "connection error"));
 db.once('open', function (callback) {
     console.log("connection succeeded");
@@ -120,21 +120,19 @@ app.get("/logout", function (req, res) {
 });
 
 app.get("/", async function (req, res) {
-    await connectMongoose()
-        .then(async () => {
-            var db = mongoose.connection;
+    await connectMongoose();
 
-            await db.collection('scholarships').find({}).toArray()
-                .then((scholarship) => {
-                    const op = scholarship.slice(0, 8);
+    var db = mongoose.connection;
+    await db.collection('scholarships').find({}).toArray()
+        .then((scholarship) => {
+            const op = scholarship.slice(0, 8);
 
-                    var objToBeSent = {
-                        CurrentUser: userLoggedIn,
-                        scholarships: op,
-                    }
+            var objToBeSent = {
+                CurrentUser: userLoggedIn,
+                scholarships: op,
+            }
 
-                    res.status(200).send(objToBeSent);
-                })
+            res.status(200).send(objToBeSent);
         })
 });
 

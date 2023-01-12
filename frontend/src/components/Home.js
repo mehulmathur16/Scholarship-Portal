@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Loader from './Loader';
 import axios from '../axios';
 
 import '../styles/Home.css';
@@ -9,9 +10,12 @@ const Home = () => {
     const [CurrentUser, setCurrentUser] = useState(undefined);
     const [scholarships, setScholarships] = useState([]);
     const [newsUpdates, setnewsUpdates] = useState('');
+    const [newsupdateLoader, setnewsUpdateLoader] = useState(true);
+    const [scholarshipsLoader, setscholarshipsLoader] = useState(true);
 
     const axiosCall = () => {
         axios.get('/').then((res) => {
+            setscholarshipsLoader(false);
             setCurrentUser(res.data.CurrentUser);
             setScholarships(res.data.scholarships);
         })
@@ -25,6 +29,8 @@ const Home = () => {
 
     const getNewsUpdates = () => {
         axios.get("/newsupdate").then((res) => {
+
+            setnewsUpdateLoader(false);
             var allUpdates = JSON.stringify(res.data.data);
             var updates = allUpdates.split("     ");
 
@@ -147,9 +153,18 @@ const Home = () => {
                         }}>
                             <h4 className="mx-auto" style={{ color: 'white' }}>News Updates</h4>
                         </div>
-                        <div className="card-body">
-                            <marquee behaviour="scroll" direction="left" id="1" dangerouslySetInnerHTML={{ __html: newsUpdates }}></marquee>
-                        </div>
+
+
+                        {(newsupdateLoader) ? (
+                            <div className="card-body" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Loader />
+                            </div>
+                        )
+                            : (
+                                <div className="card-body">
+                                    <marquee behaviour="scroll" direction="left" id="1" dangerouslySetInnerHTML={{ __html: newsUpdates }}></marquee>
+                                </div>
+                            )}
                     </div>
 
                     <div className="container col-lg-7 col-md-10 mx-auto" style={{ marginLeft: '-60px' }}>
@@ -160,29 +175,36 @@ const Home = () => {
                             <h4 className="mx-auto" style={{ color: 'white' }}>Latest Scholarships</h4>
                         </div>
                         <div>
-                            <div className="row mt-3" id="scholardetails">
-                                {scholarships?.map((scholarship) => {
-                                    return (
-                                        <div className="col-sm-6 mt-2" key={scholarship.id}>
-                                            <div className="card ml-auto">
-                                                <div className="card-body">
-                                                    <h5 className="card-title"> {scholarship.sname} </h5><i
-                                                        className="fas fa-landmark prefix mr-1"></i><span
-                                                            className="card-text"> {scholarship.authority} </span><br /><a
-                                                                href={`viewscholarship/${scholarship.id}`}
-                                                                className="btn btn-sm btn-outline-primary mt-3"
-                                                                style={{ borderRadius: '25px' }}>Check this</a>
+                            {(scholarshipsLoader) ?
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Loader sty={{ top: '25vh', position: 'relative' }} />
+                                </div>
+                                :
+                                (
+                                    <div className="row mt-3" id="scholardetails">
+                                        {scholarships?.map((scholarship) => {
+                                            return (
+                                                <div className="col-sm-6 mt-2" key={scholarship.id}>
+                                                    <div className="card ml-auto">
+                                                        <div className="card-body">
+                                                            <h5 className="card-title"> {scholarship.sname} </h5><i
+                                                                className="fas fa-landmark prefix mr-1"></i><span
+                                                                    className="card-text"> {scholarship.authority} </span><br /><a
+                                                                        href={`viewscholarship/${scholarship.id}`}
+                                                                        className="btn btn-sm btn-outline-primary mt-3"
+                                                                        style={{ borderRadius: '25px' }}>Check this</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
+                                            )
+                                        })}
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </div>
             </section>
-            </div>
+            </div >
             <br />
         </ >
     )
